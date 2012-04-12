@@ -27,6 +27,7 @@ $(function(){
 				$("#login").show();
 				var user = $("p.greeting > strong").text();
 				$("p.greeting, #online > ul").empty();
+				$("#messages > table").empty();
 				$.post("/logout", {
 					user : user
 				}, function(data){
