@@ -31,33 +31,54 @@ app.configure('production', function(){
 // Routes
 app.get('/', routes.index);
 
+// Init users & chats arrays
 var users = [];
-var messages = [];
+var chats = [];
 
-// Forms
+// Accepts an array & the value to be removed.
+var removeUser = function(array, value){
+	// Loops through each index of the array
+	for(var i in array){
+		// If it finds a match remove it from the array and return it
+		if(array[i] == value){
+			array.splice(i,1);
+			return array;
+		}
+	}
+};
+
+// When a user logs in they're added to the users array
 app.post('/login', function(req, res){
 	var username = req.body.user;
 	console.log(username);
-	
 	users.push(username);
-	
 	console.log(users);
-	
   	res.json({user: username, online: users});
 });
 
+// Adds chat to the chat array
 app.post('/chat', function(req, res){
 	var chat = req.body.chat;
-	
-	messages.push(chat);
-	console.log(messages);
-	
-	res.json({messages: messages});
-	
+	chats.push(chat);
+	console.log(chats);
+	res.json({chats: chats});
 });
 
+// Sends back the current version of 'messages' array
 app.get('/update', function(req, res){
-	res.json({messages: messages});
+	res.json({chats: chats});
+});
+
+// Sends back the current version of 'users' array
+app.get('/online', function(req, res){
+	res.json({onlineUsers: users});
+});
+
+// Takes user 'offline' by removing them from the users array
+app.post('/logout', function(req, res){
+	var user = req.body.user;
+	users = removeUser(users, user);
+	console.log(users);
 });
 
 app.listen(3000);

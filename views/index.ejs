@@ -2,9 +2,10 @@
 <header>
 	<div id="headerInner">
 		<p class="greeting"></p>
+		<a class="logout" href="javascript:void(0)">Logout</a>
 		<form id="login">
 			<input type="text" name="user" placeholder="username" />
-			<input type="submit" value="login" />
+			<input type="submit" value="Login" />
 		</form>
 		<h1><%= title %></h1>
 	</div>
@@ -12,12 +13,16 @@
 <div id="wrap">
 	<div id="online">
 		<h2>Who's Online</h2>
+		<ul>
+		</ul>
 	</div>
 	<div id="chatBox">
-		<div id="messages">
-			<table>
-
-			</table>
+		<div id="chatBox-inner">
+			<div id="messages">
+				<table>
+	
+				</table>
+			</div>
 		</div>
 		<form id="chats">
 			<input type="text" name="chats" /><br />
