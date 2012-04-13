@@ -63,6 +63,8 @@ $(function(){
 		
 		var getChats = function(){
 			if($('p.greeting').text()){
+				// Get height before new chats are retrieved
+				var currentHeight = $("#messages").prop("scrollHeight") - 20;
 				$.get("/update", function(data){
 					if(data){
 						chats = data.chats;
@@ -71,6 +73,12 @@ $(function(){
 						$.each(chats, function(i){
 							$("<tr><td class='user'>"+ chats[i].user +":"+"</td><td class='message'>"+ chats[i].message +"</td></tr>").appendTo("#messages > table");
 						});
+						// Get height after new chats are retrieved
+						var newHeight = $("#messages").prop("scrollHeight") - 20;
+						// If new height is larger scroll down to the most recent chat
+						if(newHeight > currentHeight){
+							$("#messages").animate({scrollTop: newHeight}, 300);
+						}
 					}
 					
 				});

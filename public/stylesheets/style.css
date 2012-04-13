@@ -167,7 +167,6 @@ a.logout:active {
 #chatBox-inner {
 	width: 500px;
 	margin: 0 auto;
-	overflow: auto;
 	color: #fff;
 }
 
@@ -175,15 +174,17 @@ a.logout:active {
 	width: 475px;
 	height: 400px;
 	margin: 10px auto;
+	overflow: auto;
 }
 
 #messages table {
 	border-collapse: collapse;
 	width: 100%;
+	margin: 10px 0;
 }
 
 #messages table tr {
-
+	border-bottom: 1px dashed #333;
 }
 
 #messages table tr td.user {
@@ -191,7 +192,7 @@ a.logout:active {
 	font-size: 14px;
 	padding-right: 10px;
 	width: 50px;
-	vertical-align: top:
+	vertical-align: top;
 }
 
 #messages  table tr td.message {
