@@ -6,7 +6,8 @@
 var express = require('express')
   , routes = require('./routes');
 
-var app = module.exports = express.createServer();
+var app = module.exports = express.createServer()
+  , io = require('socket.io').listen(app);
 
 // Configuration
 app.configure(function(){
@@ -43,42 +44,40 @@ var removeUser = function(array, value){
 		if(array[i] == value){
 			array.splice(i,1);
 			return array;
-		}
-	}
+		};
+	};
 };
 
-// When a user logs in they're added to the users array
-app.post('/login', function(req, res){
-	var username = req.body.user;
-	//console.log(username);
-	users.push(username);
-	//console.log(users);
-  	res.json({user: username, online: users});
-});
+io.sockets.on("connection", function(socket){
+	
+	// When a user submits their username we push
+	// them to the array which stores all current users
+	socket.on("login", function(user){
+		users.push(user);
+		console.log(users);
+		
+		// Send updated users array to all sockets
+		io.sockets.emit("updateUsers", users);
+		
+	});
+	
+	socket.on("newChat", function(chat){
+		console.log(chat);
+		io.sockets.emit("updateChat", chat);
+	});
+	
+	socket.on("logout", function(user){
+		if(users){
+			users = removeUser(users, user);
+			//console.log(users);
+			//io.sockets.broadcast.emit(user + 'has left');
+			io.sockets.emit("updateUsers", users);
+			socket.disconnect();
+		} else {
+			console.log(users + "no users");
+		};
+	});
 
-// Adds chat to the chat array
-app.post('/chat', function(req, res){
-	var chat = req.body.chat;
-	chats.push(chat);
-	//console.log(chats);
-	res.json({chats: chats});
-});
-
-// Sends back the current version of 'messages' array
-app.get('/update', function(req, res){
-	res.json({chats: chats});
-});
-
-// Sends back the current version of 'users' array
-app.get('/online', function(req, res){
-	res.json({onlineUsers: users});
-});
-
-// Takes user 'offline' by removing them from the users array
-app.post('/logout', function(req, res){
-	var user = req.body.user;
-	users = removeUser(users, user);
-	//console.log(users);
 });
 
 var port = process.env.PORT || 3000;
@@ -88,5 +87,5 @@ app.listen(port, function(){
 });
 
 
-callback = function(err, result) {}
+callback = function(err, result) {};
 // var async = require('async')	

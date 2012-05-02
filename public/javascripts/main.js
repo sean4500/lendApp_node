@@ -1,24 +1,42 @@
 $(function(){
-
-	var chatApp = function(){
 	
-		var login = function(){
+	var chatApp = function(){
+		
+		var socket = io.connect("http://localhost:3000");
+		
+		socket.on("connect", function(){
 			$("#login").submit(function(event){
 				event.preventDefault();
+				// Save username entered by user
 				var user = $("input[name=user]").val();
-				// Pass off username to login route
-				$.post("/login", {
-					user : user
-				}, function(data){
-					if(data){
-						console.log(data);
-						$("#login").hide();
-						$(".greeting").hide().html("Hello, <strong>" + data.user + "</strong>").show();
-						$(".logout").show();
-					}
-				});	
+				// Hide login
+				$("#login").hide();
+				// Display greeting & logout
+				$(".greeting").html("Hello, <strong>" +user+ "</strong>").show();
+				$(".logout").show();
+				// Emit login event and pass username off to server
+				socket.emit("login", user);
 			});
-		};
+		});
+		
+		// On the serverside 'updateUsers' event call an anom. function and pass in the
+		// users array which store online users on the server.
+		socket.on("updateUsers", function(users){
+			console.log(users);
+			// Clear out current online user list
+			$("#online > ul").empty();
+			// Loop through users array then wrap each online user in an li
+			$.each(users, function(i){
+				$("<li>"+ users[i] +"</li>").appendTo("#online > ul");
+			});
+		});
+		
+		// On the server
+		socket.on("updateChat", function(chat){
+			console.log(chat);
+			$("<tr><td class='user'>"+ chat.user +":"+"</td><td class='message'>"+ chat.message +"</td></tr>").appendTo("#messages > table");
+		});
+		
 		
 		var logout = function(){
 			$(".logout").click(function(){	
@@ -26,13 +44,9 @@ $(function(){
 				$(".greeting").hide();
 				$("#login").show();
 				var user = $("p.greeting > strong").text();
-				$("p.greeting, #online > ul").empty();
-				$("#messages > table").empty();
-				$.post("/logout", {
-					user : user
-				}, function(data){
-				
-				});
+				$("p.greeting, #online > ul").detach();
+				$("#messages > table").detach();
+				socket.emit("logout", user);
 			});
 		};
 		
@@ -46,66 +60,17 @@ $(function(){
 					var chat = {
 						user: user,
 						message: message
-					}
-					$.post("/chat", {
-						chat: chat
-					}, function(data){
-						if(data){
-							console.log(data);
-						}
-					});
+					};
+					// Emit the newChat event and pass off the current chat
+					socket.emit("newChat", chat);
 				} else {
 					alert("You must pick a nickname and login before sending anything.");
 					return false;
-				}
+				};
 			});
-		};
-		
-		var getChats = function(){
-			if($('p.greeting').text()){
-				// Get height before new chats are retrieved
-				var currentHeight = $("#messages").prop("scrollHeight") - 20;
-				$.get("/update", function(data){
-					if(data){
-						chats = data.chats;
-						console.log(chats);
-						$("#messages >  table").empty();
-						$.each(chats, function(i){
-							$("<tr><td class='user'>"+ chats[i].user +":"+"</td><td class='message'>"+ chats[i].message +"</td></tr>").appendTo("#messages > table");
-						});
-						// Get height after new chats are retrieved
-						var newHeight = $("#messages").prop("scrollHeight") - 20;
-						// If new height is larger scroll down to the most recent chat
-						if(newHeight > currentHeight){
-							$("#messages").animate({scrollTop: newHeight}, 300);
-						}
-					}
-					
-				});
-			}
-		};
-		
-		var getOnline = function(){
-			if($('p.greeting').text()){
-				$.get("/online", function(data){
-					if(data){
-						var onlineUsers = data.onlineUsers;
-						console.log(onlineUsers);
-						$("#online > ul").empty();
-						$.each(onlineUsers, function(i){
-							$("<li>"+ onlineUsers[i] +"</li>").appendTo("#online > ul");
-						});
-					}
-				});
-			}
-		};
-		
-		login();
-		logout();
+		};	
 		addChat();
-		
-		setInterval(getChats, 500);
-		setInterval(getOnline, 500);
+		logout();	
 	};
 	chatApp();
 });
