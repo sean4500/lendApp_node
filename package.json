@@ -1,10 +1,11 @@
 {
-    "name": "chatApp"
+    "name": "lendApp"
   , "version": "0.0.1"
   , "private": true
   , "dependencies": {
       "express": "2.5.8"
     , "ejs": ">= 0.0.1"
     , "socket.io": "0.9"
+    , "mysql": "2.0.0-alpha2"
   }
 }

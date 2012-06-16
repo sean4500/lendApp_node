@@ -1,32 +1,77 @@
 <!--<p>Welcome to <%= title %></p>-->
-<header>
-	<div id="headerInner">
-		<p class="greeting"></p>
-		<a class="logout" href="javascript:void(0)">Logout</a>
-		<form id="login">
-			<input type="text" name="user" placeholder="username" />
-			<input type="submit" value="Login" />
-		</form>
-		<h1><%= title %></h1>
+	<div class="wrap home">
+		<header>
+			<p>Hello,</p>
+			<form id="login">
+				<input type="text" name="user" placeholder="username" />
+				<input type="password" name="password" placeholder="*******"/><br/>
+				<input type="submit" value="Login">
+			</form>
+			<h1>lendApp</h1>
+		</header>
+		<article id="main">
+			<aside>
+				<a class="add-to-list" href="javascript:void(0);">add to list</a>
+				<ul>
+					<li id="current" class="active">CURRENT</li>
+					<li id="past">RETURNED</li>
+				</ul>
+				<a class="logout" href="javascript:void(0)">logout</a>
+			</aside>
+			<h2 class="current-title">Items Currently Out</h2>
+			<table class="current">
+				<thead>
+					<tr>
+						<th>DATE</th>
+						<th>ITEM</th>
+						<th>LENT TO</th>
+						<th>DATE OF RETURN</th>
+						<th>&nbsp;</th>
+					</tr>
+				</thead>
+				<tbody>
+<!--
+					<tr>
+						<input type="hidden" name="id" value="0" />
+						<td class="date">6/01/2012</td>
+						<td class="item">Ulock</td>
+						<td class="lent_to">Mike Jones</td>
+						<td class="return_date">6/12/2012</td>
+						<td class="btns">
+							<a class="save" href="javascript:void(0)"></a>
+							<a class="edit" href="javascript:void(0)"></a>
+						</td>
+					</tr>
+-->
+				</tbody>
+			</table>
+			
+			<h2 class="past-title">Returned Items</h2>
+			<table class="past">
+				<thead>
+					<tr>
+						<th>DATE</th>
+						<th>ITEM</th>
+						<th>LENT TO</th>
+						<th>DATE RETURNED</th>
+						<th>&nbsp;</th>
+					</tr>
+				</thead>
+				<tbody>
+<!--
+					<tr>
+						<input type="hidden" name="id" value="0" />
+						<td class="date">6/01/2012</td>
+						<td class="item">Ulock</td>
+						<td class="lent_to">Mike Jones</td>
+						<td class="return_date">6/12/2012</td>
+						<td class="btns">
+							<a class="save" href="javascript:void(0)"></a>
+							<a class="edit" href="javascript:void(0)"></a>
+						</td>
+					</tr>
+-->
+				</tbody>
+			</table>
+		</article>
 	</div>
-</header>
-<div id="wrap">
-	<div id="online">
-		<h2>Who's Online</h2>
-		<ul>
-		</ul>
-	</div>
-	<div id="chatBox">
-		<div id="chatBox-inner">
-			<div id="messages">
-				<table>
-	
-				</table>
-			</div>
-		</div>
-		<form id="chats">
-			<input type="text" name="chats" /><br />
-			<input type="submit" value="Send" />
-		</form>
-	</div>
-</div>
